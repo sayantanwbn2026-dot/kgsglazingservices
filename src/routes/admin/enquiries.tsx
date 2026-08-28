@@ -83,6 +83,20 @@ function EnquiriesPage() {
                   <div className="mt-0.5 text-[12.5px] text-ink-dim">
                     {r.org || "—"} · {new Date(r.created_at).toLocaleString()}
                   </div>
+                  {(r.email || r.phone) && (
+                    <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-[12.5px]">
+                      {r.email && (
+                        <a href={`mailto:${r.email}`} className="text-brass hover:underline break-all">
+                          {r.email}
+                        </a>
+                      )}
+                      {r.phone && (
+                        <a href={`tel:${r.phone}`} className="text-ink-dim hover:text-ink">
+                          {r.phone}
+                        </a>
+                      )}
+                    </div>
+                  )}
                 </div>
                 <div className="flex items-center gap-1 shrink-0">
                   <button

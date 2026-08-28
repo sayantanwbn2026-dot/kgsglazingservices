@@ -24,7 +24,7 @@ dist-ssr
 .vercel
 
 # Env — set these in the Vercel dashboard, never commit them
-#.env
+.env
 .env.*
 !.env.example
 

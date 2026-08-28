@@ -1,17 +1,20 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSingleton } from "@/lib/cms";
+import { resolveAsset } from "@/lib/asset-map";
 
 export function Preloader() {
-  const [mounted, setMounted] = useState(false);
   const [done, setDone] = useState(false);
+  // Same logo the hero uses (Admin → Hero → "Logo mark"), so both stay in sync.
+  const { data: h, isLoading: logoLoading } = useSingleton<any>("hero");
+  const logoUrl = resolveAsset(h?.logo_url);
 
+  // Rendered from the very first paint (server included) — gating this behind a
+  // mounted flag let the page underneath flash before the overlay appeared.
   useEffect(() => {
-    setMounted(true);
     const timer = setTimeout(() => setDone(true), 2600);
     return () => clearTimeout(timer);
   }, []);
-
-  if (!mounted) return null;
 
   return (
     <AnimatePresence>
@@ -40,21 +43,34 @@ export function Preloader() {
             className="relative z-10 flex flex-col items-center gap-8"
           >
             <div className="flex items-center gap-5 md:gap-7">
-              {/* Mirrored-K monogram */}
-              <svg
-                viewBox="0 0 84 100"
-                role="img"
-                aria-label="Kolkata Glazing Services"
-                className="h-[68px] w-auto shrink-0 text-white md:h-[92px]"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="6"
-                strokeLinecap="square"
-                strokeLinejoin="miter"
-              >
-                <path d="M18 6 L18 94 M18 50 L44 6 M18 50 L44 94" />
-                <path d="M66 6 L66 94 M66 50 L40 6 M66 50 L40 94" />
-              </svg>
+              {/* Logo mark — the CMS-uploaded logo (Admin → Hero → "Logo mark"),
+                  falling back to the built-in badge when none is set. The slot
+                  keeps its size while loading so the mark never pops the layout. */}
+              {/* Square slot reserves the space so the lockup doesn't shift
+                  when the CMS logo finishes loading. */}
+              <div className="flex h-[68px] w-[68px] shrink-0 items-center justify-center md:h-[92px] md:w-[92px]">
+                {logoLoading ? null : logoUrl ? (
+                  <img
+                    src={logoUrl}
+                    alt="Kolkata Glazing Services"
+                    loading="eager"
+                    decoding="async"
+                    // Height is pinned to the lockup so the mark lines up with the
+                    // divider and the wordmark; width follows the logo's aspect.
+                    className="h-[68px] w-auto object-contain md:h-[92px]"
+                  />
+                ) : (
+                  <span
+                    role="img"
+                    aria-label="Kolkata Glazing Services"
+                    className="grid h-[68px] w-[68px] place-items-center rounded-2xl bg-white text-ink md:h-[92px] md:w-[92px]"
+                  >
+                    <span className="font-display text-[34px] font-bold leading-none tracking-tight md:text-[46px]">
+                      K
+                    </span>
+                  </span>
+                )}
+              </div>
 
               <span className="h-[68px] w-px shrink-0 bg-white/25 md:h-[92px]" />
 
@@ -84,16 +100,6 @@ export function Preloader() {
               Facade Engineering
             </motion.p>
           </motion.div>
-
-          {/* Corner index */}
-          <motion.span
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.6 }}
-            className="pointer-events-none absolute bottom-6 left-6 font-mono text-[9px] uppercase tracking-[0.2em] text-white/25"
-          >
-            KGS · Est. 1998
-          </motion.span>
         </motion.div>
       )}
     </AnimatePresence>

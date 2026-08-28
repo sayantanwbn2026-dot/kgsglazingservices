@@ -77,7 +77,7 @@ export const SCHEMAS: Record<string, SectionSchema> = {
     table: "hero",
     title: "Hero",
     description:
-      "The top of the homepage — background photograph, the logo lockup and three stats.",
+      "The top of the homepage — background photograph, the logo lockup and three stats. The logo mark here is also used on the loading screen.",
     fields: [
       img(
         "background_image_url",
@@ -87,7 +87,7 @@ export const SCHEMAS: Record<string, SectionSchema> = {
       img(
         "logo_url",
         "Logo mark",
-        "The mark beside 'Kolkata Glazing Services'. Use a WHITE / light SVG or transparent PNG — it sits on the dark photo. ~240 × 300 px. Leave empty to use the built-in monogram.",
+        "The KGS logo — used in the hero AND on the loading screen. Use a WHITE / light SVG or transparent PNG — it sits on dark backgrounds. ~240 × 300 px. Leave empty to use the built-in monogram.",
       ),
       n("stat1_value", "Stat 1 — number"),
       t("stat1_suffix", "Stat 1 — suffix"),

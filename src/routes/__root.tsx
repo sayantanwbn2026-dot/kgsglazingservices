@@ -122,6 +122,17 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    // Don't let the browser restore the previous scroll position on reload, and
+    // always begin a fresh page load at the top (the hero), not mid-page.
+    if ("scrollRestoration" in window.history) window.history.scrollRestoration = "manual";
+    window.scrollTo(0, 0);
+    // Run once more after the router's own scroll-restoration pass so we win.
+    const raf = requestAnimationFrame(() => window.scrollTo(0, 0));
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <Preloader />
