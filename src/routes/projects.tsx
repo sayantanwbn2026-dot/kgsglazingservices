@@ -76,13 +76,17 @@ function ProjectsPage() {
   const [filter, setFilter] = useState<Filter>("All");
   const [active, setActive] = useState<Project | null>(null);
 
+  // Lock the page behind the modal and let Escape dismiss it. Without the key
+  // handler the only way out on a phone was a button that sat off-screen.
   useEffect(() => {
-    if (active) {
-      document.body.style.overflow = "hidden";
-    } else {
+    if (!active) return;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setActive(null); };
+    window.addEventListener("keydown", onKey);
+    return () => {
       document.body.style.overflow = "";
-    }
-    return () => { document.body.style.overflow = ""; };
+      window.removeEventListener("keydown", onKey);
+    };
   }, [active]);
 
   const filtered = useMemo(() => {
@@ -233,25 +237,47 @@ function ProjectsPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[60] bg-ink/70 backdrop-blur-md p-4 md:p-10 flex items-center justify-center"
+            className="fixed inset-0 z-[60] bg-ink/70 backdrop-blur-md flex items-end justify-center md:items-center md:p-10"
             onClick={() => setActive(null)}
           >
             <motion.div
-              initial={{ opacity: 0, y: 30, scale: 0.97 }}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="project-modal-title"
+              initial={{ opacity: 0, y: 40, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 20, scale: 0.98 }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              exit={{ opacity: 0, y: 30, scale: 0.98 }}
+              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
               onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-5xl bg-background rounded-[var(--radius)] overflow-hidden border border-line shadow-[0_30px_80px_-20px_rgba(15,23,42,0.4)] grid grid-cols-1 md:grid-cols-2"
+              // A bottom sheet on phones, a centered dialog from md up. Capped
+              // height + an inner scroll area keeps long content reachable.
+              className="relative flex w-full max-h-[92dvh] flex-col overflow-hidden rounded-t-2xl border border-line bg-background shadow-[0_30px_80px_-20px_rgba(15,23,42,0.4)] md:max-h-[88vh] md:max-w-5xl md:rounded-[var(--radius)]"
             >
-              <div className="relative aspect-[4/5] md:aspect-auto md:min-h-[520px] bg-surface">
+              {/* Always reachable — it stays put while the content scrolls. */}
+              <button
+                onClick={() => setActive(null)}
+                aria-label="Close project details"
+                className="absolute right-3 top-3 z-20 grid h-10 w-10 place-items-center rounded-full bg-ink/55 text-white backdrop-blur-md transition-colors hover:bg-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:right-4 md:top-4"
+              >
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                </svg>
+              </button>
+
+              {/* Grab handle — signals the sheet on touch devices. */}
+              <div className="pointer-events-none absolute inset-x-0 top-2 z-20 flex justify-center md:hidden">
+                <span className="h-1 w-10 rounded-full bg-white/60" />
+              </div>
+
+              <div className="grid grid-cols-1 overflow-y-auto overscroll-contain md:grid-cols-2">
+              <div className="relative aspect-[16/11] md:aspect-auto md:min-h-[520px] bg-surface">
                 <img src={active.img} alt={active.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover bg-surface" />
               </div>
-              <div className="p-8 md:p-12 flex flex-col">
+              <div className="flex flex-col p-7 pb-[max(1.75rem,env(safe-area-inset-bottom))] md:p-12">
                 <div className="font-display text-[10px] tracking-[0.3em] uppercase text-brass">
                   {active.n} · {active.tag}
                 </div>
-                <h3 className="mt-4 display-sub text-2xl md:text-[2.1rem] leading-[1.05]">
+                <h3 id="project-modal-title" className="mt-4 display-sub text-2xl md:text-[2.1rem] leading-[1.05]">
                   {active.name}
                 </h3>
                 <p className="mt-4 body-lead">
@@ -272,17 +298,22 @@ function ProjectsPage() {
                   ))}
                 </div>
 
-                <div className="mt-auto pt-10 flex items-center justify-between">
+                <div className="mt-auto flex flex-col-reverse items-stretch gap-3 pt-8 sm:flex-row sm:items-center sm:justify-between md:pt-10">
                   <button
                     onClick={() => setActive(null)}
-                    className="font-display text-[11px] tracking-[0.3em] uppercase text-ink-dim hover:text-ink transition-colors"
+                    className="min-h-[44px] font-display text-[11px] tracking-[0.3em] uppercase text-ink-dim transition-colors hover:text-ink"
                   >
                     ← Close
                   </button>
-                  <Link to="/" hash="contact" className="btn-primary !py-2.5 !px-4 !text-[13px]">
+                  <Link
+                    to="/"
+                    hash="contact"
+                    className="btn-primary justify-center !py-3 !px-4 !text-[13px] sm:!py-2.5"
+                  >
                     Discuss a similar project
                   </Link>
                 </div>
+              </div>
               </div>
             </motion.div>
           </motion.div>

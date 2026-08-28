@@ -531,11 +531,24 @@ export const SCHEMAS: Record<string, SectionSchema> = {
     key: "footer",
     table: "footer",
     title: "Footer",
-    description: "The closing wordmark at the very bottom of the homepage. Renders as: line 1, then accent + rest.",
+    description:
+      "The closing wordmark at the very bottom of the homepage, plus the social links. Renders as: line 1, then accent + rest.",
     fields: [
       t("brand_line1", "Brand — line 1", "e.g. 'Kolkata'."),
       t("brand_line2_accent", "Brand — line 2 accent (italic blue)", "e.g. 'Glazing'."),
       t("brand_line2_rest", "Brand — line 2 rest", "e.g. 'Services'."),
+      {
+        name: "instagram_url",
+        label: "Instagram page",
+        type: "url",
+        help: "Full link, e.g. https://www.instagram.com/kolkataglazing. Leave empty to hide the icon.",
+      },
+      {
+        name: "facebook_url",
+        label: "Facebook page",
+        type: "url",
+        help: "Full link, e.g. https://www.facebook.com/kolkataglazing. Leave empty to hide the icon.",
+      },
     ],
   },
   clients_page: {

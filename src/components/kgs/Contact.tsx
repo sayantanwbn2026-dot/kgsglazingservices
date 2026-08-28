@@ -90,7 +90,7 @@ export function Contact() {
 
           <div className="mt-12 space-y-5 max-w-md">
             {[
-              { k: "Email", v: c?.email || (isLoading ? "studio@kgs-facades.com" : "studio@kgs-facades.com") },
+              { k: "Email", v: c?.email || "support@kolkataglazing.com" },
               { k: "Phone", v: c?.phone || (isLoading ? "+91 33 4000 0000" : "+91 33 4000 0000") },
               { k: "Office", v: c?.office_address || (isLoading ? "Salt Lake Sector V, Kolkata 700091" : "Salt Lake Sector V, Kolkata 700091") },
               { k: "Factory", v: c?.factory_address || (isLoading ? "Howrah Industrial Estate, WB" : "Howrah Industrial Estate, WB") },

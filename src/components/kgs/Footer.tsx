@@ -1,3 +1,4 @@
+import { Facebook, Instagram } from "lucide-react";
 import { useSingleton } from "@/lib/cms";
 
 export function Footer() {
@@ -6,6 +7,13 @@ export function Footer() {
   const brandLine1 = f?.brand_line1 || "Kolkata";
   const brandLine2Accent = f?.brand_line2_accent || "Glazing";
   const brandLine2Rest = f?.brand_line2_rest || "Services";
+
+  // Social links come from the CMS (Admin → Footer); each icon only appears
+  // once its link is filled in, so we never render a dead link.
+  const socials = [
+    { label: "Instagram", href: f?.instagram_url, Icon: Instagram },
+    { label: "Facebook", href: f?.facebook_url, Icon: Facebook },
+  ].filter((s) => typeof s.href === "string" && s.href.trim() !== "");
 
   // The consultation section (07) already carries every contact detail, so the
   // footer is just the wordmark that closes the page.
@@ -18,6 +26,24 @@ export function Footer() {
           <span className="text-brass italic">{brandLine2Accent}</span> {brandLine2Rest}
           <span className="text-brass">.</span>
         </h2>
+
+        {socials.length > 0 && (
+          <div className="mt-10 flex items-center gap-3 md:mt-14">
+            {socials.map(({ label, href, Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`KGS on ${label}`}
+                title={label}
+                className="group grid h-11 w-11 place-items-center rounded-full border border-line text-ink-dim transition-colors duration-300 hover:border-brass hover:bg-brass hover:text-white"
+              >
+                <Icon className="h-[18px] w-[18px]" strokeWidth={1.6} aria-hidden="true" />
+              </a>
+            ))}
+          </div>
+        )}
       </div>
     </footer>
   );

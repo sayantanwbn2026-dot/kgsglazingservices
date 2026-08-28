@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "@tanstack/react-router";
+import { useSingleton } from "@/lib/cms";
 
 export function PageCTA({
   eyebrow = "Next Step",
@@ -10,6 +11,10 @@ export function PageCTA({
   title?: string;
   copy?: string;
 }) {
+  // Editable in the CMS: Admin → Contact — Consultation → Email.
+  const { data: c } = useSingleton<any>("contact");
+  const email = c?.email || "support@kolkataglazing.com";
+
   return (
     <section className="relative bg-surface-2 py-28 md:py-40 overflow-hidden">
       <div
@@ -60,8 +65,8 @@ export function PageCTA({
               <path d="M3 7h8m0 0L7 3m4 4l-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </Link>
-          <a href="mailto:studio@kgs-facades.com" className="btn-ghost">
-            studio@kgs-facades.com
+          <a href={`mailto:${email}`} className="btn-ghost">
+            {email}
           </a>
         </motion.div>
       </div>
