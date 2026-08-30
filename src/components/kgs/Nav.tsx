@@ -44,10 +44,7 @@ export function Nav({ alwaysSolid = false }: { alwaysSolid?: boolean } = {}) {
     >
       <div className="container-kgs flex h-16 md:h-[68px] items-center justify-between">
         {/* Brand */}
-        <Link to="/" className="group flex items-center gap-2">
-          <span className="grid place-items-center h-8 w-8 rounded-lg bg-ink text-white transition-all duration-300 group-hover:bg-brass">
-            <span className="font-display text-[12px] font-bold tracking-tight">K</span>
-          </span>
+        <Link to="/" className="group flex items-center">
           <span
             className={[
               "font-display text-[14px] font-semibold tracking-tight transition-colors duration-300",

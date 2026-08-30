@@ -1,4 +1,4 @@
-import { Facebook, Instagram } from "lucide-react";
+import { Instagram, Linkedin } from "lucide-react";
 import { useSingleton } from "@/lib/cms";
 
 export function Footer() {
@@ -12,7 +12,7 @@ export function Footer() {
   // once its link is filled in, so we never render a dead link.
   const socials = [
     { label: "Instagram", href: f?.instagram_url, Icon: Instagram },
-    { label: "Facebook", href: f?.facebook_url, Icon: Facebook },
+    { label: "LinkedIn", href: f?.linkedin_url, Icon: Linkedin },
   ].filter((s) => typeof s.href === "string" && s.href.trim() !== "");
 
   // The consultation section (07) already carries every contact detail, so the

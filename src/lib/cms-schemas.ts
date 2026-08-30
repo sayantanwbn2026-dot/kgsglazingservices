@@ -544,10 +544,10 @@ export const SCHEMAS: Record<string, SectionSchema> = {
         help: "Full link, e.g. https://www.instagram.com/kolkataglazing. Leave empty to hide the icon.",
       },
       {
-        name: "facebook_url",
-        label: "Facebook page",
+        name: "linkedin_url",
+        label: "LinkedIn page",
         type: "url",
-        help: "Full link, e.g. https://www.facebook.com/kolkataglazing. Leave empty to hide the icon.",
+        help: "Full link, e.g. https://www.linkedin.com/company/kolkata-glazing-services. Leave empty to hide the icon.",
       },
     ],
   },
